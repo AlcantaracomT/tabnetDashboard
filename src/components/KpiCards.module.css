@@ -1,0 +1,62 @@
+.containerPrincipal {
+    padding: 20px;
+    background: #f4f6f8;
+    font-family: Arial, sans-serif;
+}
+
+.cabecalho {
+    margin-bottom: 20px;
+}
+
+.cabecalho h2 {
+    font-size: 25px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+}
+
+.gridCard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    border-left: 5px solid #3b82f6;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.card span {
+    font-size: 13px;
+    color: #777;
+}
+
+.card strong {
+    font-size: 22px;
+    color: #111;
+}
+
+.card.valorMedio {
+    border-left-color: #10b981;
+}
+
+.card.taxaMortalidade {
+    border-left-color: #f59e0b;
+}
+
+.card.obitos {
+    border-left-color: #ef4444;
+}
