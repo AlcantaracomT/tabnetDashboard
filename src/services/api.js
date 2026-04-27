@@ -1,23 +1,15 @@
-const BASE_URL = "http://localhost:8000/"
-
-const headers= {
-    "chave": import.meta.env.VITE_API_KEY
-}
-
-export async function producaoHospitalar(ano, estado) {
-
-    let ano1 = `&ano=${ano}`
-    let estado1 = `&estado=${estado}`
-
-    if(!ano){
-        ano1 = ""
-        estado1 = ""
+import axios from 'axios'
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+    headers: {
+        'x-api-key': import.meta.env.VITE_API_KEY || 'free-key'
     }
+});
 
-    const url = `${BASE_URL}producaoHospitalar?limit=417${ano1}${estado1}`
-    const resposta = await fetch(url, {method:"GET", headers: headers})
-    if(!resposta.ok){
-        throw new Error("Ocorreu um erro ao buscar a API")
-    }
-    return await resposta.json()
+export async function producaoHospitalar(ano, uf, mes) {
+    const resposta = await api.get(`/sih/`, {
+        params: { uf, ano, mes }
+    });
+
+    return resposta.data
 }

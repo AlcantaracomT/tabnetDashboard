@@ -1,16 +1,17 @@
 import styles from "./KpiCards.module.css"
 
-function KpiCards({ dados }) {
+function KpiCards({ dados, filtros}) {
     const totalInternacoes = dados.reduce((acc, d) => acc + d.internacoes, 0)
 
     const valor_total = dados.reduce((acc, d) => acc + d.valor_total, 0)
 
-    const obitos = dados.reduce((acc, d) => acc + d.obitos, 0)
+    const valormediointernacoes = totalInternacoes > 0 ? (valor_total / totalInternacoes) : 0
+    const somaPonderadaMortalidade = dados.reduce((acc, d) => acc + (d.taxa_mortalidade * d.internacoes), 0);
 
-    const taxa_mortalidade = totalInternacoes > 0 ? ((obitos / totalInternacoes)*100).toFixed(2) : 0
+    const taxa_mortalidade = totalInternacoes > 0 ? (somaPonderadaMortalidade / totalInternacoes).toFixed(2) : 0
 
-    const totalDias = dados.reduce((acc, d) => acc + d.dias_permanencia, 0)
-    const dias_permanencia = dados.length > 0 ? (totalDias / dados.length).toFixed(0) : 0
+    const somaPonderadaPermanencia = dados.reduce((acc, d) => acc + (d.media_permanencia * d.internacoes), 0)
+    const dias_permanencia = dados.length > 0 ? (somaPonderadaPermanencia / totalInternacoes).toFixed(1) : 0
 
     const valormediointern = totalInternacoes > 0 ? (valor_total / totalInternacoes).toFixed(0) : 0
 
@@ -21,7 +22,7 @@ function KpiCards({ dados }) {
         <div className={styles.containerPrincipal}>
 
             <div className={styles.cabecalho}>
-                <h2>Estado ({dados[0]?.estado}) Ano - {dados[0]?.ano}</h2>
+                <h2>{filtros.municipio ? `Município: ${filtros.municipio}` : `Estado (${filtros.estado})`} |  Mês {filtros.mes} - {filtros.ano}</h2>
             </div>
 
             {dados.length === 0 ? (<p>Carregando...</p>) 
@@ -39,8 +40,8 @@ function KpiCards({ dados }) {
                     </div>
 
                     <div className={`${styles.card} ${styles.obitos}`}>
-                        <span>Óbitos</span>
-                        <strong>{formatar(obitos)}</strong>
+                        <span>Media Internações</span>
+                        <strong>{formatar(valormediointernacoes)}</strong>
                     </div>
 
                     <div className={`${styles.card} ${styles.taxaMortalidade}`}>

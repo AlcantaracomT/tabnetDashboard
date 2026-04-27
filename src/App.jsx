@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import {  useState, useMemo } from "react"
 import { producaoHospitalar } from "./services/api"
 import Filtro from "./components/Filtro";
 import KpiCards from "./components/KpiCards";
@@ -7,42 +7,55 @@ import TopInternacoes from "./components/TopInternacoes";
 function App() {
 
   const [dados, setDados] = useState([])
-  const [atualiza, setAtualiza] = useState({ ano: "", estado: "" })
-  const [dadosNovo, setDadosNovo] = useState([])
+  const [atualiza, setAtualiza] = useState({ ano: "", estado: "", mes:"1", municipio: "" })
+  const [dadosNovo, setDadosNovo] = useState(false)
+  const [carregando, setCarregando] = useState(false)
 
-  useEffect(() => {
-    async function buscarDados() {
-      const resultado = await producaoHospitalar()
-      setDados(resultado)
+  const carregarDados = async (novosFiltros) => {
+    if (!novosFiltros.estado || !novosFiltros.ano || !novosFiltros.mes)
+      return
+
+    setCarregando(true)
+    try {
+      const resposta = await producaoHospitalar(novosFiltros.ano, novosFiltros.estado, novosFiltros.mes);
+      setDados(resposta.dados || [])
+      setDadosNovo(true)
+    } catch (e) {
+      console.error("Erro ao buscar dados", e)
+    } finally {
+      setCarregando(false)
     }
-    buscarDados()
-  }, [])
+  }
 
-  useEffect(() => {
-    async function buscaNova() {
-      let novaBusca
+  const dadosFiltradosPorMunicipio = useMemo(() => {
+    if (!atualiza.municipio) return dados
+    return dados.filter(d => d.municipio_nome === atualiza.municipio)
+  }, [dados, atualiza.municipio])
 
-      if (!atualiza.ano | !atualiza.estado) {
-        novaBusca = await producaoHospitalar("2020", "ba")
-      }
-      else {
-        novaBusca = await producaoHospitalar(atualiza.ano, atualiza.estado)
-      }
 
-      setDadosNovo(novaBusca)
-    }
-
-    buscaNova()
-  }, [atualiza.ano, atualiza.estado])
 
   return (
     <div style={{ padding: 20 }}>
       <h1>Dashboard Produção Hospitalar</h1>
-      <Filtro dados={dados} filtroOk={setAtualiza} />
-      <KpiCards dados={dadosNovo} />
+      <Filtro dados={dados} filtroOk={(f) => {
+        setAtualiza(f)
+        if (f.estado !== atualiza.estado || f.ano !== atualiza.ano || f.mes !== atualiza.mes) {
+          carregarDados(f);
+        }
+      }} />
 
-      <TopInternacoes dados={dadosNovo}/>
+      {carregando && <p>... Aguarde.</p>}
+      {!carregando && dadosNovo && dadosFiltradosPorMunicipio.length > 0 ? (
+        <>
+          <KpiCards dados={dadosFiltradosPorMunicipio} filtros={atualiza}/>
 
+          <TopInternacoes dados={dadosFiltradosPorMunicipio} filtros={atualiza}/>
+        </>
+      ) :
+        (!carregando && <div style={{ textAlign: 'center', marginTop: 50, color: '#666' }}>
+          <p>{dadosNovo ? "Nenhum dado" :"Selecione UF e Ano"}</p>
+        </div>
+        )}
     </div>
   );
 }
