@@ -9,9 +9,6 @@
   <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/activity.svg" alt="Activity Icon" width="100">
 </p>
 
-## Live Demo
-**Acesse o projeto online:** [https://tabnet-dashboard.vercel.app/](https://tabnet-dashboard.vercel.app/)
-
 ---
 
 ## Sobre o Projeto
