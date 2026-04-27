@@ -36,3 +36,18 @@
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .campoPesquisa {
+        width: 100%;
+    }
+    
+    .select {
+        width: 100%;
+    }
+}

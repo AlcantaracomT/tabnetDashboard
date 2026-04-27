@@ -35,7 +35,7 @@ function App() {
 
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: '2vw', maxWidth: '1200px', margin: '0 auto' }}>
       <h1>Dashboard Produção Hospitalar</h1>
       <Filtro dados={dados} filtroOk={(f) => {
         setAtualiza(f)

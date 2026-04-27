@@ -60,3 +60,27 @@
 .card.obitos {
     border-left-color: #ef4444;
 }
+
+@media (max-width: 768px) {
+    .cabecalho h2 {
+        font-size: 18px;
+    }
+
+    .gridCard {
+        /* No celular, tenta colocar 2 lado a lado, se não der, cai pra 1 */
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+    }
+
+    .card {
+        padding: 12px;
+    }
+
+    .card strong {
+        font-size: 18px; /* Reduz a fonte dos números grandões */
+    }
+
+    .card span {
+        font-size: 12px;
+    }
+}
